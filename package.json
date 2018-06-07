@@ -1,0 +1,25 @@
+{
+  "name": "react-mui-dashboard",
+  "version": "0.0.1",
+  "author": "Minh Nguyen",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "material-ui",
+    "react-dashboard"
+  ],
+  "dependencies": {
+    "@material-ui/core": "^1.0.0-rc.0",
+    "@material-ui/icons": "^1.0.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
