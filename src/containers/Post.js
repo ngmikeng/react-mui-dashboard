@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SimpleTable from './SimpleTable';
+import SimpleTable from '../components/SimpleTable';
 
 class Post extends Component {
   constructor(props) {

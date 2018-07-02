@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SimpleTable from './SimpleTable';
+import SimpleTable from '../components/SimpleTable';
 
 class User extends Component {
   constructor(props) {
