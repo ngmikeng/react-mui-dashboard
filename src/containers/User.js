@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import SimpleTable from '../components/SimpleTable';
+import ModalUser from '../components/ModalUser';
+import { Paper, Button } from '@material-ui/core';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      openCreateModal: false
     };
+    this.handleOpenCreateModal = this.handleOpenCreateModal.bind(this);
+    this.handleCloseCreateModal = this.handleCloseCreateModal.bind(this);
   }
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -23,6 +29,18 @@ class User extends Component {
       });
   }
 
+  handleOpenCreateModal() {
+    this.setState({
+      openCreateModal: true
+    });
+  }
+
+  handleCloseCreateModal() {
+    this.setState({
+      openCreateModal: false
+    });
+  }
+
   render() {
     const headers = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Website'];
     const dataKeys = ['id', 'name', 'username', 'email', 'phone', 'website'];
@@ -32,7 +50,13 @@ class User extends Component {
         <h2>
           Users
         </h2>
+        <Paper>
+          <Button variant="contained" color="primary" onClick={this.handleOpenCreateModal}>
+            <PersonAddIcon/> Create
+          </Button>
+        </Paper>
         <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} />
+        <ModalUser open={this.state.openCreateModal} onClose={this.handleCloseCreateModal} />
       </div>
     );
   }
