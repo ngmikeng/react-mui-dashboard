@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, withStyles } from '@material-ui/core';
+import { Typography, TextField, Button, withStyles } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
 
 const styles = theme => ({
@@ -13,6 +13,10 @@ const styles = theme => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
   },
+  formContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  }
 });
 
 class ModalUser extends Component {
@@ -30,9 +34,31 @@ class ModalUser extends Component {
           <Typography variant="title">
             Create User
           </Typography>
-          <Typography variant="subheading">
-            WIP Create User
-          </Typography>
+          <div className="modalBody">
+            <form className={classes.formContainer}>
+              <TextField
+                id="name"
+                label="Name"
+                className={classes.textField}
+                value={this.props.name}
+                margin="normal"
+                fullWidth
+              />
+              <TextField
+                id="username"
+                label="Username"
+                className={classes.textField}
+                value={this.props.username}
+                margin="normal"
+                fullWidth
+              />
+            </form>
+          </div>
+          <div className="modalFooter">
+            <Button color="primary" onClick={this.props.onSubmit}>
+              Create
+            </Button>
+          </div>
         </div>
       </Modal>
     );
