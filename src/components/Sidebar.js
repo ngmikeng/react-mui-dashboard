@@ -35,14 +35,14 @@ class Sidebar extends Component {
           <List>
             {
               this.props.routes.map((route, index) => (
-                <NavLink to={route.path} key={index}>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <route.icon/>
-                    </ListItemIcon>
-                    <ListItemText primary={route.sidebarName} />
-                  </ListItem>
-                </NavLink>
+                <ListItem component={NavLink} to={route.path} key={index} className={classes.navLink} activeStyle={{fontWeight: 'bold', background: '#cdcdcd'}} button>
+                  <ListItemIcon>
+                    <route.icon/>
+                  </ListItemIcon>
+                  <ListItemText primary={route.sidebarName} classes={{
+                    primary: classes.listItemTextPrimary
+                  }} />
+                </ListItem>
               )
             )}
           </List>

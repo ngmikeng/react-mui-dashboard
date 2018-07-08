@@ -11,6 +11,12 @@ const SidebarStyle = theme => ({
     justifyContent: 'flex-end',
     padding: '0 8px',
     ...theme.mixins.toolbar,
+  },
+  navLink: {
+    textDecoration: 'none'
+  },
+  listItemTextPrimary: {
+    fontWeight: 'unset'
   }
 });
 

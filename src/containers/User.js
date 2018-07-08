@@ -9,10 +9,11 @@ class User extends Component {
     super(props);
     this.state = {
       data: [],
-      openCreateModal: false
+      isOpenCreateModal: false
     };
     this.handleOpenCreateModal = this.handleOpenCreateModal.bind(this);
     this.handleCloseCreateModal = this.handleCloseCreateModal.bind(this);
+    this.handleCreateUser = this.handleCreateUser.bind(this);
   }
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -31,13 +32,21 @@ class User extends Component {
 
   handleOpenCreateModal() {
     this.setState({
-      openCreateModal: true
+      isOpenCreateModal: true
     });
   }
 
   handleCloseCreateModal() {
     this.setState({
-      openCreateModal: false
+      isOpenCreateModal: false
+    });
+  }
+
+  handleCreateUser(user) {
+    user.id = this.state.data.length + 1;
+    this.setState({
+      data: [user, ...this.state.data],
+      isOpenCreateModal: false
     });
   }
 
@@ -56,7 +65,9 @@ class User extends Component {
           </Button>
         </Paper>
         <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} />
-        <ModalUser open={this.state.openCreateModal} onClose={this.handleCloseCreateModal} />
+        <ModalUser open={this.state.isOpenCreateModal} 
+          onClose={this.handleCloseCreateModal} 
+          onCreate={this.handleCreateUser} />
       </div>
     );
   }
