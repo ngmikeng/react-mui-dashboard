@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, TextField, Button, withStyles } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
+import { Formik } from 'formik';
 
 const styles = theme => ({
   paper: {
@@ -21,37 +22,106 @@ const styles = theme => ({
   modalFooter: {
     marginTop: '20px',
     textAlign: 'right',
+    width: '100%'
   }
 });
 
 class ModalUser extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ...this.defaultUser,
-      validates: {}
-    };
-    this.defaultUser = { 
-      name: '',
-      username: '',
-      email: '',
-    };
-    this.createUser = this.createUser.bind(this);
-    this.handleFieldChange = this.handleFieldChange.bind(this);
-  }
 
-  createUser() {
-    const newUser = { ...this.state };
-    if (newUser.username && newUser.email) {
-      this.props.onCreate(newUser);
-      this.setState({ ...this.defaultUser });
-    }
+    this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.handleValidate = this.handleValidate.bind(this);
+    this.handleRenderForm = this.handleRenderForm.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleFieldChange(name) {
     return (event) => {
       this.setState({ [name]: event.target.value });
     }
+  }
+
+  handleValidate(values) {
+    let errors = {};
+    if (!values.email) {
+      errors.email = 'Required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+    if (!values.username) {
+      errors.username = 'Required';
+    }
+    if (!values.name) {
+      errors.name = 'Required';
+    }
+    return errors;
+  }
+
+  handleSubmit(values, action) {
+    const newUser = { ...values };
+    this.props.onCreate(newUser);
+  }
+
+  handleRenderForm({
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+  }) {
+    const { classes, onClose  } = this.props;
+
+    return (
+      <form className={classes.formContainer} onSubmit={handleSubmit} noValidate>
+        <TextField
+          name="name"
+          label="Name"
+          className={classes.textField}
+          value={values.name}
+          onChange={handleChange}
+          margin="normal"
+          fullWidth
+          required
+          error={!!errors.name}
+        />
+        { touched.name && errors.name && <Typography variant="caption" color="error">{errors.name}</Typography> }
+        <TextField
+          name="username"
+          label="Username"
+          className={classes.textField}
+          value={values.username}
+          onChange={handleChange}
+          margin="normal"
+          fullWidth
+          required
+          error={!!errors.username}
+        />
+        { touched.username && errors.username && <Typography variant="caption" color="error">{errors.username}</Typography> }
+        <TextField
+          name="email"
+          label="Email"
+          className={classes.textField}
+          value={values.email}
+          onChange={handleChange}
+          margin="normal"
+          fullWidth
+          required
+          error={!!errors.email}
+        />
+        { touched.email && errors.email && <Typography variant="caption" color="error">{errors.email}</Typography> }
+        <div className={classes.modalFooter}>
+          <Button type="submit" color="primary" disabled={isSubmitting}>
+            Create
+          </Button>
+          <Button color="default" onClick={onClose}>
+            Cancel
+          </Button>
+        </div>
+      </form>
+    )
   }
 
   render() {
@@ -69,46 +139,15 @@ class ModalUser extends Component {
             Create User
           </Typography>
           <div className="modalBody">
-            <form className={classes.formContainer}>
-              <TextField
-                id="name"
-                label="Name"
-                className={classes.textField}
-                value={this.state.name}
-                onChange={this.handleFieldChange('name')}
-                margin="normal"
-                fullWidth
-                required
-              />
-              <TextField
-                id="username"
-                label="Username"
-                className={classes.textField}
-                value={this.state.username}
-                onChange={this.handleFieldChange('username')}
-                margin="normal"
-                fullWidth
-                required
-              />
-              <TextField
-                id="email"
-                label="Email"
-                className={classes.textField}
-                value={this.state.email}
-                onChange={this.handleFieldChange('email')}
-                margin="normal"
-                fullWidth
-                required
-              />
-            </form>
-          </div>
-          <div className={classes.modalFooter}>
-            <Button color="primary" onClick={this.createUser}>
-              Create
-            </Button>
-            <Button color="default" onClick={this.props.onClose}>
-              Cancel
-            </Button>
+            <Formik initialValues={{
+                name: '',
+                username: '',
+                email: ''
+              }}
+              validate={this.handleValidate}
+              onSubmit={this.handleSubmit}
+              render={this.handleRenderForm} 
+            />
           </div>
         </div>
       </Modal>
