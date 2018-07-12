@@ -5,10 +5,15 @@ import { Table,
   TableCell, 
   TableHead, 
   TableRow, 
-  Paper } from '@material-ui/core';
+  Paper, Button } from '@material-ui/core';
 
 function SimpleTable(props) {
-  const { headers, dataRows, dataKeys } = props;
+  const { headers, dataRows, dataKeys, onDelete } = props;
+  const handleDelete = (data, index) => {
+    return () => {
+      onDelete(data, index);
+    }
+  }
 
   return (
     <Paper>
@@ -18,6 +23,7 @@ function SimpleTable(props) {
             {headers.map((content, index) => (
               <TableCell key={index}>{content}</TableCell>
             ))}
+            { <TableCell key={headers.length}></TableCell> }
           </TableRow>
         </TableHead>
         <TableBody>
@@ -29,6 +35,13 @@ function SimpleTable(props) {
                     {data[keyProp]}
                   </TableCell>
                 ))}
+                {
+                  <TableCell key={dataKeys.length}>
+                    <Button variant="contained" color="secondary" onClick={ handleDelete(data, index) }>
+                      Delete
+                    </Button>
+                  </TableCell> 
+                }
               </TableRow>
             );
           })}

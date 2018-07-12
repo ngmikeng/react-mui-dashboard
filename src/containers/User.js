@@ -14,6 +14,7 @@ class User extends Component {
     this.handleOpenCreateModal = this.handleOpenCreateModal.bind(this);
     this.handleCloseCreateModal = this.handleCloseCreateModal.bind(this);
     this.handleCreateUser = this.handleCreateUser.bind(this);
+    this.handleDeleteUser = this.handleDeleteUser.bind(this);
   }
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -50,6 +51,19 @@ class User extends Component {
     });
   }
 
+  handleDeleteUser(user, index) {
+    console.log(user);
+    console.log(index);
+    let isConfirm = window.confirm(`Are you sure you want to delete this user ?`);
+    if (isConfirm) {
+      let users = [...this.state.data];
+      users.splice(index, 1);
+      this.setState({
+        data: users
+      });
+    }
+  }
+
   render() {
     const headers = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Website'];
     const dataKeys = ['id', 'name', 'username', 'email', 'phone', 'website'];
@@ -64,7 +78,7 @@ class User extends Component {
             <PersonAddIcon/> Create
           </Button>
         </Paper>
-        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} />
+        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeleteUser} />
         <ModalUser open={this.state.isOpenCreateModal} 
           onClose={this.handleCloseCreateModal} 
           onCreate={this.handleCreateUser} />
