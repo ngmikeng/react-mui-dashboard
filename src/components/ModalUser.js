@@ -126,6 +126,11 @@ class ModalUser extends Component {
 
   render() {
     const { classes } = this.props;
+    const userData = this.props.user || {
+      name: '',
+      username: '',
+      email: ''
+    };
 
     return (
       <Modal
@@ -139,11 +144,7 @@ class ModalUser extends Component {
             Create User
           </Typography>
           <div className="modalBody">
-            <Formik initialValues={{
-                name: '',
-                username: '',
-                email: ''
-              }}
+            <Formik initialValues={userData}
               validate={this.handleValidate}
               onSubmit={this.handleSubmit}
               render={this.handleRenderForm} 
@@ -157,6 +158,7 @@ class ModalUser extends Component {
 
 ModalUser.propTypes = {
   classes: PropTypes.object.isRequired,
+  user: PropTypes.object,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired

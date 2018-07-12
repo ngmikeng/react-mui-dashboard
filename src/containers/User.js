@@ -9,7 +9,9 @@ class User extends Component {
     super(props);
     this.state = {
       data: [],
-      isOpenCreateModal: false
+      isOpenCreateModal: false,
+      userEditing: null,
+      currentIndex: null
     };
     this.handleOpenCreateModal = this.handleOpenCreateModal.bind(this);
     this.handleCloseCreateModal = this.handleCloseCreateModal.bind(this);
@@ -31,9 +33,11 @@ class User extends Component {
       });
   }
 
-  handleOpenCreateModal() {
+  handleOpenCreateModal(user, index) {
     this.setState({
-      isOpenCreateModal: true
+      isOpenCreateModal: true,
+      userEditing: user,
+      currentIndex: index
     });
   }
 
@@ -44,11 +48,16 @@ class User extends Component {
   }
 
   handleCreateUser(user) {
-    user.id = this.state.data.length + 1;
-    this.setState({
-      data: [user, ...this.state.data],
-      isOpenCreateModal: false
-    });
+    if (this.state.currentIndex >= 0 && this.state.userEditing) {
+      console.log(this.state.currentIndex);
+      console.log(this.state.userEditing);
+    } else {
+      user.id = this.state.data.length + 1;
+      this.setState({
+        data: [user, ...this.state.data],
+        isOpenCreateModal: false
+      });
+    }
   }
 
   handleDeleteUser(user, index) {
@@ -78,8 +87,9 @@ class User extends Component {
             <PersonAddIcon/> Create
           </Button>
         </Paper>
-        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeleteUser} />
-        <ModalUser open={this.state.isOpenCreateModal} 
+        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeleteUser} onEdit={this.handleOpenCreateModal} />
+        <ModalUser open={this.state.isOpenCreateModal}
+          user={this.state.userEditing}
           onClose={this.handleCloseCreateModal} 
           onCreate={this.handleCreateUser} />
       </div>

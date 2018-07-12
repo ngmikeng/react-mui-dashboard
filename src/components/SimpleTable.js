@@ -8,10 +8,15 @@ import { Table,
   Paper, Button } from '@material-ui/core';
 
 function SimpleTable(props) {
-  const { headers, dataRows, dataKeys, onDelete } = props;
+  const { headers, dataRows, dataKeys, onDelete, onEdit } = props;
   const handleDelete = (data, index) => {
     return () => {
       onDelete(data, index);
+    }
+  }
+  const handleEdit = (data, index) => {
+    return () => {
+      onEdit(data, index);
     }
   }
 
@@ -37,6 +42,9 @@ function SimpleTable(props) {
                 ))}
                 {
                   <TableCell key={dataKeys.length}>
+                    <Button variant="contained" color="default" onClick={ handleEdit(data, index) }>
+                      Edit
+                    </Button>
                     <Button variant="contained" color="secondary" onClick={ handleDelete(data, index) }>
                       Delete
                     </Button>
