@@ -33,7 +33,7 @@ class ModalUser extends Component {
     this.handleFieldChange = this.handleFieldChange.bind(this);
     this.handleValidate = this.handleValidate.bind(this);
     this.handleRenderForm = this.handleRenderForm.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitForm = this.handleSubmitForm.bind(this);
   }
 
   handleFieldChange(name) {
@@ -58,9 +58,9 @@ class ModalUser extends Component {
     return errors;
   }
 
-  handleSubmit(values, action) {
+  handleSubmitForm(values, action) {
     const newUser = { ...values };
-    this.props.onCreate(newUser);
+    this.props.onSubmitForm(newUser);
   }
 
   handleRenderForm({
@@ -114,7 +114,7 @@ class ModalUser extends Component {
         { touched.email && errors.email && <Typography variant="caption" color="error">{errors.email}</Typography> }
         <div className={classes.modalFooter}>
           <Button type="submit" color="primary" disabled={isSubmitting}>
-            Create
+            { this.props.user ? "Save" : "Create" }
           </Button>
           <Button color="default" onClick={onClose}>
             Cancel
@@ -126,11 +126,15 @@ class ModalUser extends Component {
 
   render() {
     const { classes } = this.props;
-    const userData = this.props.user || {
+    let userData = {
       name: '',
       username: '',
       email: ''
     };
+
+    if (this.props.user && this.props.user.id) {
+      userData = { ...this.props.user };
+    }
 
     return (
       <Modal
@@ -146,7 +150,7 @@ class ModalUser extends Component {
           <div className="modalBody">
             <Formik initialValues={userData}
               validate={this.handleValidate}
-              onSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmitForm}
               render={this.handleRenderForm} 
             />
           </div>
@@ -161,7 +165,7 @@ ModalUser.propTypes = {
   user: PropTypes.object,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onCreate: PropTypes.func.isRequired
+  onSubmitForm: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ModalUser);

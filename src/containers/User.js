@@ -13,9 +13,9 @@ class User extends Component {
       userEditing: null,
       currentIndex: null
     };
-    this.handleOpenCreateModal = this.handleOpenCreateModal.bind(this);
+    this.handleOpenUserModal = this.handleOpenUserModal.bind(this);
     this.handleCloseCreateModal = this.handleCloseCreateModal.bind(this);
-    this.handleCreateUser = this.handleCreateUser.bind(this);
+    this.handleSubmitUser = this.handleSubmitUser.bind(this);
     this.handleDeleteUser = this.handleDeleteUser.bind(this);
   }
   componentDidMount() {
@@ -33,7 +33,7 @@ class User extends Component {
       });
   }
 
-  handleOpenCreateModal(user, index) {
+  handleOpenUserModal(user, index) {
     this.setState({
       isOpenCreateModal: true,
       userEditing: user,
@@ -47,10 +47,16 @@ class User extends Component {
     });
   }
 
-  handleCreateUser(user) {
+  handleSubmitUser(user) {
     if (this.state.currentIndex >= 0 && this.state.userEditing) {
-      console.log(this.state.currentIndex);
-      console.log(this.state.userEditing);
+      const data = [...this.state.data];
+      data[this.state.currentIndex] = user;
+      setTimeout(() => {
+        this.setState({
+          data: data,
+          isOpenCreateModal: false
+        });
+      }, 200);
     } else {
       user.id = this.state.data.length + 1;
       this.setState({
@@ -61,8 +67,6 @@ class User extends Component {
   }
 
   handleDeleteUser(user, index) {
-    console.log(user);
-    console.log(index);
     let isConfirm = window.confirm(`Are you sure you want to delete this user ?`);
     if (isConfirm) {
       let users = [...this.state.data];
@@ -83,15 +87,15 @@ class User extends Component {
           Users
         </h2>
         <Paper>
-          <Button variant="contained" color="primary" onClick={this.handleOpenCreateModal}>
+          <Button variant="contained" color="primary" onClick={(e) => this.handleOpenUserModal()}>
             <PersonAddIcon/> Create
           </Button>
         </Paper>
-        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeleteUser} onEdit={this.handleOpenCreateModal} />
+        <SimpleTable headers={headers} dataKeys={dataKeys} dataRows={this.state.data} onDelete={this.handleDeleteUser} onEdit={this.handleOpenUserModal} />
         <ModalUser open={this.state.isOpenCreateModal}
           user={this.state.userEditing}
-          onClose={this.handleCloseCreateModal} 
-          onCreate={this.handleCreateUser} />
+          onClose={this.handleCloseCreateModal}
+          onSubmitForm={this.handleSubmitUser} />
       </div>
     );
   }
